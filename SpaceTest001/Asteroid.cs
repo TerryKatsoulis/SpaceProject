@@ -10,7 +10,10 @@ using Microsoft.Xna.Framework.Storage;
 namespace SpaceTest001
 {
     public class Asteroid : Sprite {
-       
+        const float maxAsteroidWidth = 0.0f;
+        const float minAsteroidWidth = 1.0f;
+        const float maxAsteroidVelocity = 3.0f;
+        const float minAsteroidVelocity = 1.0f;
        
        private Rectangle viewPort;
        private Random random = new Random();
@@ -21,7 +24,7 @@ namespace SpaceTest001
         private float mass { get; set; }
 
 
-        public void Update(float elapsedTime, ref Player thePlayer) {
+        public void Update(float elapsedTime, ref Player thePlayer, ref Rectangle viewPort) {
             //TODO: playerPos will be used in Orbit as the center variable 
 
             if (inBelt) {
@@ -58,19 +61,18 @@ namespace SpaceTest001
                     asteroid.Acceleration = new Vector2(0, 0);
                     asteroid.Position += ((asteroid.Velocity * elapsed) + (0.5f * (asteroid.Acceleration * (elapsed * elapsed))));*/
                     this.Rotation -= 0.02f;
-                    Console.WriteLine("Asteroid: " + this.Rotation);
+                 // Console.WriteLine("Asteroid: " + this.Rotation);
                     this.Rotation = MathHelper.Clamp(this.Rotation, -MathHelper.Pi * 360, 360);
                     inBelt = true;
-
                 }
 
-                if (!viewportRect.Contains(new Point((int)this.Position.X, (int)this.Position.Y))) {
+                if (!viewPort.Contains(new Point((int)this.Position.X, (int)this.Position.Y))) {
                     this.Alive = false;
                 }
             } else {
                 this.Alive = true;
 
-                this.Position = new Vector2(MathHelper.Lerp((float)viewportRect.Width * minAsteroidWidth, (float)viewportRect.Width * maxAsteroidWidth, (float)random.NextDouble()), viewportRect.Top);
+                this.Position = new Vector2(MathHelper.Lerp((float)viewPort.Width * minAsteroidWidth, (float)viewPort.Width * maxAsteroidWidth, (float)random.NextDouble()), viewPort.Top);
                 this.Velocity = new Vector2(random.Next(-2, 2), MathHelper.Lerp(minAsteroidVelocity, maxAsteroidVelocity, (float)random.NextDouble()));
 
             }
@@ -92,7 +94,10 @@ namespace SpaceTest001
             //viewPort =
             inBelt = inBlt;
             mass = m;
-            viewPort = 
+            this.Position = new Vector2(MathHelper.Lerp((float)viewPort.Width * minAsteroidWidth, (float)viewPort.Width * maxAsteroidWidth, (float)random.NextDouble()), viewPort.Top);
+            this.Velocity = new Vector2(random.Next(-2, 2), MathHelper.Lerp(minAsteroidVelocity, maxAsteroidVelocity, (float)random.NextDouble()));
+
+             
             return;
         }
 

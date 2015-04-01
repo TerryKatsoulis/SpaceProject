@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace SpaceTest001
 {
-    class Sprite
+    public class Sprite
     {
 
         public float aMass = 1.0f;

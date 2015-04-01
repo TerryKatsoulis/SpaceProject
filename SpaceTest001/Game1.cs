@@ -21,7 +21,7 @@ namespace SpaceTest001
 
         private scBackground starBG;
         Player playerShip;
-        private Rectangle viewportRect { get; set; }
+        Rectangle viewportRect;
 
         Texture2D playerShotTexture;
         List<Shot> playerShotList = new List<Shot>();
@@ -29,7 +29,7 @@ namespace SpaceTest001
         float timeSinceLastShot;
         const float TIME_BETWEEN_SHOT = 0.35f;
 
-        const int maxAsteroids = 1;
+        const int maxAsteroids = 10;
         const float maxAsteroidWidth = 0.0f;
         const float minAsteroidWidth = 1.0f;
         const float maxAsteroidVelocity = 3.0f;
@@ -43,7 +43,7 @@ namespace SpaceTest001
 
         Random random = new Random();
 
-        Sprite[] asteroids;
+       // Sprite[] asteroids;
 
         Asteroid[] asteroidss; 
 
@@ -92,16 +92,21 @@ namespace SpaceTest001
             playerShotTexture = Content.Load<Texture2D>("Images/playerShot");
 
             //TODO: replace this witht he version below it 
-            asteroids = new Sprite[maxAsteroids];
-            for (int i = 0; i < maxAsteroids; i++)
-            {
-                asteroids[i] = new Sprite(Content.Load<Texture2D>("Images/asteroid"));
-            }
+            //asteroids = new Sprite[maxAsteroids];
+            //for (int i = 0; i < maxAsteroids; i++)
+            //{
+            //    asteroids[i] = new Sprite(Content.Load<Texture2D>("Images/asteroid"));
+            //}
 
             //TODO: replace above with below 
             asteroidss = new Asteroid[maxAsteroids];
             for (int i = 0; i < maxAsteroids; i++) {
                 asteroidss[i] = new Asteroid(Content.Load<Texture2D>("Images/asteroid"));
+                /*Vector2 tPos;
+                tPos.Y = asteroidss[i].Position.Y;
+                tPos.X = asteroidss[i].Position.X;
+                tPos.X += i * 10;
+                asteroidss[i].Position = tPos;*/
             }
 
 
@@ -161,7 +166,7 @@ namespace SpaceTest001
                 {
                     Rectangle shotRect = new Rectangle((int)defaultShot.Position.X, (int)defaultShot.Position.Y, defaultShot.TextureImage.Width - 10, defaultShot.TextureImage.Height - 10);
 
-                    foreach (Sprite asteroid in asteroids)
+                    foreach (Asteroid asteroid in asteroidss)
                     {
                         Rectangle asteroidRect = new Rectangle((int)asteroid.Position.X, (int)asteroid.Position.Y, asteroid.Image.Width - 10, asteroid.Image.Height - 10);
 
@@ -202,81 +207,81 @@ namespace SpaceTest001
             {
                 float elapsed = (float)gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
 
-                asteroid.Update(elapsed, ref playerShip);
+                asteroid.Update(elapsed, ref playerShip, ref viewportRect);
 
 
-                if (asteroid.Alive)
-                {
-                    asteroid.Position += asteroid.Velocity;
-                    asteroid.Rotation += random.Next(-1, 1) * elapsed;
+            //    if (asteroid.Alive)
+            //    {
+            //        asteroid.Position += asteroid.Velocity;
+            //        asteroid.Rotation += random.Next(-1, 1) * elapsed;
 
-                    Vector2 dir = playerShip.Position - asteroid.Position;
-                    float radius = dir.Length();
-                    float forceMag = (G * asteroid.aMass * playerShip.psMass) / (float)Math.Pow(radius, 2);
-                    dir.Normalize();
-                    Vector2 gForce = forceMag * dir;
+            //        Vector2 dir = playerShip.Position - asteroid.Position;
+            //        float radius = dir.Length();
+            //        float forceMag = (G * asteroid.aMass * playerShip.psMass) / (float)Math.Pow(radius, 2);
+            //        dir.Normalize();
+            //        Vector2 gForce = forceMag * dir;
                    
-                    asteroid.Force = gForce;
-                    asteroid.Acceleration = asteroid.Force / asteroid.aMass;
-                    asteroid.Position += ((asteroid.Velocity * elapsed) + (0.5f * (asteroid.Acceleration * (elapsed * elapsed))));
+            //        asteroid.Force = gForce;
+            //        asteroid.Acceleration = asteroid.Force / asteroid.aMass;
+            //        asteroid.Position += ((asteroid.Velocity * elapsed) + (0.5f * (asteroid.Acceleration * (elapsed * elapsed))));
 
-                    if (radius <= 75)
-                    {
+            //        if (radius <= 75)
+            //        {
 
-                        //respawn = 0; mv^2/r
+            //            //respawn = 0; mv^2/r
 
-                        asteroid.Position = new Vector2(playerShip.Position.X, playerShip.Position.Y);
-                        asteroid.Center = new Vector2(60, 60);
+            //            asteroid.Position = new Vector2(playerShip.Position.X, playerShip.Position.Y);
+            //            asteroid.Center = new Vector2(60, 60);
 
-                        /*asteroid.Velocity = new Vector2(dir.Y, -dir.X);
-                        asteroid.Acceleration = new Vector2(0, 0);
-                        asteroid.Position += ((asteroid.Velocity * elapsed) + (0.5f * (asteroid.Acceleration * (elapsed * elapsed))));*/
-                        asteroid.Rotation -= 0.02f;
-                        Console.WriteLine("Asteroid: " + asteroid.Rotation);
-                        asteroid.Rotation = MathHelper.Clamp(asteroid.Rotation, -MathHelper.Pi * 360, 360);
-                        asteroid.Belt = true;
+            //            /*asteroid.Velocity = new Vector2(dir.Y, -dir.X);
+            //            asteroid.Acceleration = new Vector2(0, 0);
+            //            asteroid.Position += ((asteroid.Velocity * elapsed) + (0.5f * (asteroid.Acceleration * (elapsed * elapsed))));*/
+            //            asteroid.Rotation -= 0.02f;
+            //            Console.WriteLine("Asteroid: " + asteroid.Rotation);
+            //            asteroid.Rotation = MathHelper.Clamp(asteroid.Rotation, -MathHelper.Pi * 360, 360);
+            //           // asteroid.Belt = true;
                         
-                    }
+            //        }
 
-                    if (!viewportRect.Contains(new Point((int)asteroid.Position.X, (int)asteroid.Position.Y)))
-                    {
-                        asteroid.Alive = false;
-                    }
-                }
-                else
-                {
-                    asteroid.Alive = true;
+            //        if (!viewportRect.Contains(new Point((int)asteroid.Position.X, (int)asteroid.Position.Y)))
+            //        {
+            //            asteroid.Alive = false;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        asteroid.Alive = true;
 
-                    asteroid.Position = new Vector2(MathHelper.Lerp ((float)viewportRect.Width * minAsteroidWidth, (float)viewportRect.Width * maxAsteroidWidth, (float)random.NextDouble()), viewportRect.Top);
-                    asteroid.Velocity = new Vector2(random.Next(-2, 2), MathHelper.Lerp(minAsteroidVelocity, maxAsteroidVelocity, (float)random.NextDouble()));
+                 //   asteroid.Position = new Vector2(MathHelper.Lerp ((float)viewportRect.Width * minAsteroidWidth, (float)viewportRect.Width * maxAsteroidWidth, (float)random.NextDouble()), viewportRect.Top);
+                //    asteroid.Velocity = new Vector2(random.Next(-2, 2), MathHelper.Lerp(minAsteroidVelocity, maxAsteroidVelocity, (float)random.NextDouble()));
                    
-                }
+            //    }
             }
         }
 
         public void UpdateAsteroidsBelt(GameTime gameTime)
         {
-            foreach (Sprite asteroid in asteroids)
-            {
-                float elapsed = (float)gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
+            //foreach (Asteroid asteroid in asteroidss)
+            //{
+            //    float elapsed = (float)gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
 
-                if (asteroid.Alive)
-                {
-                    asteroid.Center = new Vector2(asteroid.Image.Width / 2, asteroid.Image.Height / 2);
-                    asteroid.Position = new Vector2(asteroid.Position.X, asteroid.Position.Y);
-                    Vector2 dir = playerShip.Position - asteroid.Position;
-                    float radius = dir.Length();
-                    float forceMag = (G * asteroid.aMass * playerShip.psMass) / (float)Math.Pow(radius, 2);
-                    dir.Normalize();
-                    Vector2 gForce = forceMag * dir;
+            //    if (asteroid.Alive)
+            //    {
+            //        asteroid.Center = new Vector2(asteroid.Image.Width / 2, asteroid.Image.Height / 2);
+            //        asteroid.Position = new Vector2(asteroid.Position.X, asteroid.Position.Y);
+            //        Vector2 dir = playerShip.Position - asteroid.Position;
+            //        float radius = dir.Length();
+            //        float forceMag = (G * asteroid.aMass * playerShip.psMass) / (float)Math.Pow(radius, 2);
+            //        dir.Normalize();
+            //        Vector2 gForce = forceMag * dir;
 
-                    asteroid.Force = -gForce;
-                    asteroid.Acceleration = asteroid.Force / asteroid.aMass;
-                    asteroid.Position += -asteroid.Velocity;
-                    //asteroid.Position += ((asteroid.Velocity * elapsed) + (0.5f * (asteroid.Acceleration * (elapsed * elapsed))));
-                }
+            //        asteroid.Force = -gForce;
+            //        asteroid.Acceleration = asteroid.Force / asteroid.aMass;
+            //        asteroid.Position += -asteroid.Velocity;
+            //        //asteroid.Position += ((asteroid.Velocity * elapsed) + (0.5f * (asteroid.Acceleration * (elapsed * elapsed))));
+            //    }
                
-            }
+            //}
         }
 
         public void UpdateEnemies(float elapsedTime)
@@ -402,7 +407,7 @@ namespace SpaceTest001
                 defaultShot.Draw(spriteBatch);
             }
 
-            foreach (Sprite asteroid in asteroids)
+            foreach (Asteroid asteroid in asteroidss)
             {
                 if (asteroid.Alive)
                 {
