@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.GamerServices;
 #endregion
 
 namespace SpaceTest001
-{
+{    
     /// <summary>
     /// This is the main type for your game
     /// </summary>

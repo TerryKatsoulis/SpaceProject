@@ -30,3 +30,5 @@ C:\Users\Terry\Desktop\School\Games\SpaceTest001\SpaceTest001\bin\Windows\Debug\
 C:\Users\Terry\Desktop\School\Games\SpaceTest001\SpaceTest001\bin\Windows\Debug\Content\Images\flames.png
 C:\Users\Terry\Desktop\School\Games\SpaceTest001\SpaceTest001\bin\Windows\Debug\Content\Images\enemyship1.png
 C:\Users\Terry\Desktop\School\Games\SpaceTest001\SpaceTest001\bin\Windows\Debug\Content\Images\enemyship2.png
+C:\GameDev\_Projects\SpaceProject\SpaceTest001\obj\x86\Debug\SpaceTest001.exe
+C:\GameDev\_Projects\SpaceProject\SpaceTest001\obj\x86\Debug\SpaceTest001.pdb
